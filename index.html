@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ivan Rodrigues | Portfólio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; scroll-behavior:smooth; }
+
+    body {
+      background:#010409;
+      color:#e6edf3;
+      overflow-x:hidden;
+      cursor:none;
+    }
+
+    canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2; }
+
+    /* GRID OVERLAY */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(rgba(14,165,255,0.05) 1px, transparent 1px),
+                 linear-gradient(90deg, rgba(14,165,255,0.05) 1px, transparent 1px);
+      background-size:40px 40px;
+      z-index:-1;
+    }
+
+    header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:20px 10%;
+      background:rgba(1,4,9,0.7);
+      border-bottom:1px solid rgba(0,140,255,0.15);
+      position:sticky; top:0; z-index:1000; backdrop-filter:blur(10px);
+    }
+
+    header h1 { color:#0ea5ff; font-weight:600; letter-spacing:1px; }
+
+    nav a { color:#8b949e; margin-left:20px; text-decoration:none; position:relative; }
+    nav a::after {
+      content:""; position:absolute; width:0; height:2px; bottom:-4px; left:0;
+      background:#0ea5ff; transition:0.3s;
+    }
+    nav a:hover { color:#0ea5ff; }
+    nav a:hover::after { width:100%; }
+
+    .hero {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:40px 20px;
+    }
+
+    .hero h2 {
+      font-size:3rem; color:#0ea5ff;
+      text-shadow:0 0 20px rgba(14,165,255,0.4);
+    }
+
+    .typing { border-right:2px solid #0ea5ff; white-space:nowrap; overflow:hidden; }
+
+    .hero p { margin:20px 0; color:#9ca3af; max-width:600px; }
+
+    .btn {
+      padding:14px 30px; background:#0ea5ff; border:none; color:#fff;
+      border-radius:8px; cursor:pointer; transition:0.3s;
+      box-shadow:0 0 15px rgba(14,165,255,0.4);
+    }
+    .btn:hover { background:#0284c7; transform:translateY(-2px); }
+
+    .section { padding:100px 10%; text-align:center; }
+    .section h2 { margin-bottom:40px; color:#0ea5ff; }
+
+    .cards {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px;
+    }
+
+    .card {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      background:rgba(2,6,23,0.7);
+      padding:30px; border-radius:14px;
+      border:1px solid rgba(0,140,255,0.1);
+      transition:0.4s; opacity:0; transform:translateY(40px);
+      backdrop-filter:blur(8px);
+    }
+
+    .card.show { opacity:1; transform:translateY(0); }
+
+    .card:hover {
+      transform:translateY(-10px) scale(1.02);
+      border-color:#0ea5ff;
+      box-shadow:0 0 25px rgba(14,165,255,0.25);
+    }
+
+    /* ICON ANIMATION (premium) */
+    .card img {
+      width: 54px;
+      filter: drop-shadow(0 0 6px rgba(14,165,255,0.4));
+      transition: transform .35s ease, filter .35s ease;
+      animation: floatY 3.5s ease-in-out infinite;
+    }
+
+    .card:hover img {
+      transform: translateY(-6px) scale(1.08) rotate(3deg);
+      filter: drop-shadow(0 0 14px rgba(14,165,255,0.9));
+      animation: pulseGlow 1.6s ease-in-out infinite;
+    }
+
+    @keyframes floatY {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes pulseGlow {
+      0%,100% { filter: drop-shadow(0 0 10px rgba(14,165,255,0.7)); }
+      50% { filter: drop-shadow(0 0 22px rgba(14,165,255,1)); }
+    }
+
+    footer {
+      text-align:center; padding:20px;
+      background:#020617; color:#6b7280;
+      border-top:1px solid rgba(14,165,255,0.1);
+    }
+
+    .whatsapp {
+      position:fixed; bottom:20px; right:20px;
+      background:#0ea5ff; color:white; font-size:20px;
+      padding:14px 16px; border-radius:50%; text-decoration:none;
+      transition:0.3s; box-shadow:0 0 15px rgba(14,165,255,0.6);
+    }
+    .whatsapp:hover { transform:scale(1.15); background:#0284c7; }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      width:12px; height:12px;
+      border-radius:50%;
+      background:#0ea5ff;
+      position:fixed;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      z-index:2000;
+      box-shadow:0 0 10px rgba(14,165,255,0.8);
+    }
+
+    @media(max-width:768px){
+  body{
+    max-width:430px;
+    margin:0 auto;
+  }
+
+  header{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  body{cursor:auto;}
+  .cursor{display:none;}
+
+  header{padding:15px 5%;}
+
+  .hero h2{font-size:2rem;}
+  .hero p{font-size:14px;}
+
+  .section{padding:60px 5%;}
+
+  .cards{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .card{
+    transform:none !important;
+    transition:0.3s;
+  }
+
+  .card:hover{
+    transform:translateY(-5px);
+  }
+
+  /* desativa tilt no mobile */
+  .card{
+    perspective:none;
+  }
+
+  canvas{
+    opacity:0.4; /* fundo mais leve no mobile */
+  }
+
+  .whatsapp{
+    padding:12px 14px;
+    font-size:18px;
+  }
+} .cursor{display:none;} }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div class="cursor" id="cursor"></div>
+
+<header>
+  <h1>Ivan Rodrigues</h1>
+  <nav>
+    <a href="#">Início</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#skills">Skills</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#contato">Contato</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <h2 class="typing" id="typing"></h2>
+    <p id="subtyping" style="color:#fff; margin-top:10px; font-weight:300;"></p>
+    <p>Interfaces modernas, código limpo e experiências digitais de alto nível.</p>
+    <button class="btn" onclick="window.open('https://wa.me/5511988356200?text=Ol%C3%A1%2C%20vi%20seu%20portf%C3%B3lio!', '_blank')">Fale comigo</button>
+  </div>
+</section>
+
+<section id="sobre" class="section">
+  <h2>Sobre mim</h2>
+  <p>Sou Ivan Rodrigues, focado em criar experiências digitais com estética moderna e alta performance.</p>
+</section>
+
+<section id="skills" class="section">
+  <h2>Skills</h2>
+  <div class="cards">
+
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" width="50" />
+      <h3>HTML5</h3>
+      <p>Estrutura sólida e semântica moderna.</p>
+    </div>
+
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width="50" />
+      <h3>CSS3</h3>
+      <p>Design responsivo e estilização avançada.</p>
+    </div>
+
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="50" />
+      <h3>JavaScript</h3>
+      <p>Interatividade e lógica moderna.</p>
+    </div>
+
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" width="50" />
+      <h3>Figma</h3>
+      <p>Protótipos e design de interfaces.</p>
+    </div>
+
+  </div>
+</section>
+
+<section id="servicos" class="section">
+  <h2>Serviços</h2>
+  <div class="cards">
+    <div class="card"><h3>Criação de Sites</h3><p>Sites modernos e profissionais.</p></div>
+    <div class="card"><h3>Design</h3><p>Identidade visual e interfaces.</p></div>
+    <div class="card"><h3>Social Media</h3><p>Conteúdo visual estratégico.</p></div>
+  </div>
+</section>
+
+<section id="contato" class="section">
+  <h2>Contato</h2>
+  <p>Entre em contato comigo pelo WhatsApp ou redes sociais.</p>
+</section>
+
+<footer>
+  <p>© 2026 Ivan Rodrigues</p>
+</footer>
+
+<a href="https://wa.me/5511988356200?text=Ol%C3%A1%2C%20vi%20seu%20portf%C3%B3lio!" class="whatsapp" target="_blank">💬</a>
+
+<script>
+/* typing effect */
+const mainText = "Desenvolvedor & Designer";
+const subText = "Desenvolvedor Web, Design, Social Media";
+let i=0;
+let j=0;
+
+function typeMain(){
+  if(i < mainText.length){
+    document.getElementById("typing").innerHTML += mainText.charAt(i);
+    i++;
+    setTimeout(typeMain, 60);
+  } else {
+    setTimeout(typeSub, 400);
+  }
+}
+
+function typeSub(){
+  if(j < subText.length){
+    document.getElementById("subtyping").innerHTML += subText.charAt(j);
+    j++;
+    setTimeout(typeSub, 40);
+  }
+}
+
+typeMain();
+
+/* cursor */
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e=>{
+  cursor.style.left = e.clientX+'px';
+  cursor.style.top = e.clientY+'px';
+});
+
+/* particles network */
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resize(); window.addEventListener('resize',resize);
+
+const particles=Array.from({length:100}).map(()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  vx:(Math.random()-0.5)*0.7,
+  vy:(Math.random()-0.5)*0.7
+}));
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width) p.vx*=-1;
+    if(p.y<0||p.y>canvas.height) p.vy*=-1;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
+    ctx.fillStyle="#0ea5ff";
+    ctx.fill();
+  });
+
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      let dx=particles[i].x-particles[j].x;
+      let dy=particles[i].y-particles[j].y;
+      let dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<100){
+        ctx.strokeStyle=`rgba(14,165,255,${1-dist/100})`;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* scroll reveal */
+const cards=document.querySelectorAll('.card');
+window.addEventListener('scroll',()=>{
+  cards.forEach(c=>{
+    if(c.getBoundingClientRect().top<window.innerHeight-50){
+      c.classList.add('show');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
